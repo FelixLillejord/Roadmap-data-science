@@ -72,3 +72,12 @@ def ensure_output_dir(path: str | Path | None = None) -> Path:
     out = Path(path) if path is not None else DEFAULT_OUTPUT_DIR
     out.mkdir(parents=True, exist_ok=True)
     return out
+
+
+# Placeholder search configuration (to be updated with real endpoint and params)
+SEARCH_BASE_URL: Final[str] = "https://example.invalid/jobs/search"
+PARAM_SECTOR: Final[str] = "sector"
+SECTOR_STATE_VALUE: Final[str] = "state"
+PARAM_OPEN_ONLY: Final[str] = "open_only"
+PARAM_PAGE: Final[str] = "page"
+PARAM_QUERY: Final[str] = "q"

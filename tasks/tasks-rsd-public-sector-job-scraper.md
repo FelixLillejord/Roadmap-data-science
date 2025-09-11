@@ -9,6 +9,7 @@
 - `scripts/public_state_jobs/salary_parse.py` - Salary parsing and normalization to annual NOK min/max.
 - `scripts/public_state_jobs/jobcode_parse.py` - Job code extraction (e.g., `kode\\s*(\\d{3,5})`) and mapping to titles if present.
 - `scripts/public_state_jobs/discovery.py` - Listing discovery, filters (state-sector), pagination, stable `listing_id` extraction.
+  Adds URL builder with state-sector and open-only filters (2.1).
 - `scripts/public_state_jobs/detail_parse.py` - Detail page fetch + extraction of required fields; per-code salary mapping.
 - `scripts/public_state_jobs/state.py` - SQLite state store for incremental scraping, fingerprints, and change detection.
 - `scripts/public_state_jobs/models.py` - Dataclass models for listing-level and exploded row schemas.
@@ -39,10 +40,10 @@
   - [x] 1.5 Configure `pytest.ini` and minimal test scaffolding.
 
 - [ ] 2.0 Listing discovery with state-sector filtering and pagination
-  - [ ] 2.1 Document search URL and query params; add builder to apply state-sector filter and open-listings filter.
-  - [ ] 2.2 Implement pagination loop to enumerate all result pages.
-  - [ ] 2.3 Extract `listing_id` (prefer site ID/UUID); else derive stable hash from `source_url`.
-  - [ ] 2.4 Capture summary fields from list pages (e.g., updated/published dates) when available.
+  - [x] 2.1 Document search URL and query params; add builder to apply state-sector filter and open-listings filter.
+  - [x] 2.2 Implement pagination loop to enumerate all result pages.
+  - [x] 2.3 Extract `listing_id` (prefer site ID/UUID); else derive stable hash from `source_url`.
+  - [x] 2.4 Capture summary fields from list pages (e.g., updated/published dates) when available.
   - [ ] 2.5 Unit tests for pagination and ID stability using HTML fixtures.
 
 - [ ] 3.0 Organization keyword matching and normalization rules
