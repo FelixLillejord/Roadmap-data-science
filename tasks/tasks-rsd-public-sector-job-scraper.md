@@ -46,7 +46,7 @@
   - [x] 2.4 Capture summary fields from list pages (e.g., updated/published dates) when available.
   - [x] 2.5 Unit tests for pagination and ID stability using HTML fixtures.
 
-- [ ] 3.0 Organization keyword matching and normalization rules
+- [x] 3.0 Organization keyword matching and normalization rules
   - [x] 3.1 Implement normalization: lowercase, whitespace collapse, punctuation removal, accent-insensitive.
   - [x] 3.2 Define keyword sets and synonyms: `Forsvar*` token prefix, `PST`/`Politiets sikkerhetstjeneste`, `NSM`/`Nasjonal sikkerhetsmyndighet`.
   - [x] 3.3 Implement matching priority: employer field first; title token fallback for `forsvar*` when state filter is applied.
