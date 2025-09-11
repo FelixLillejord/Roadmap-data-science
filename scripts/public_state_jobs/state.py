@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
-from typing import Final, Iterable
+from typing import Final, Iterable, Iterable, Optional
+
+from .models import ListingSummary
 
 
 DB_FILENAME: Final[str] = "public_state_jobs.sqlite3"
@@ -63,3 +65,56 @@ def ensure_db(db_dir: str | Path) -> Path:
         init_db(conn)
     return db_path
 
+
+# --- Upsert helpers (4.2) ---
+
+def upsert_listing(
+    conn: sqlite3.Connection,
+    *,
+    listing_id: str,
+    last_seen_at: str,
+    updated_at: Optional[str] = None,
+    detail_fingerprint: Optional[str] = None,
+) -> None:
+    """Insert or update a listing's last seen and summary metadata.
+
+    - Advances ``last_seen_at`` to the maximum (ISO8601 lexicographic)
+    - Updates ``updated_at`` only when a non-null value is provided
+    - Preserves existing ``detail_fingerprint`` unless a non-null value is provided
+    """
+    sql = (
+        """
+        INSERT INTO listings(listing_id, last_seen_at, updated_at, detail_fingerprint)
+        VALUES(?, ?, ?, ?)
+        ON CONFLICT(listing_id) DO UPDATE SET
+            last_seen_at = CASE
+                WHEN excluded.last_seen_at > COALESCE(listings.last_seen_at, '')
+                THEN excluded.last_seen_at ELSE listings.last_seen_at END,
+            updated_at = COALESCE(excluded.updated_at, listings.updated_at),
+            detail_fingerprint = COALESCE(listings.detail_fingerprint, excluded.detail_fingerprint)
+        """
+    )
+    conn.execute(sql, (listing_id, last_seen_at, updated_at, detail_fingerprint))
+
+
+def upsert_from_summaries(
+    conn: sqlite3.Connection,
+    summaries: Iterable[ListingSummary],
+    *,
+    seen_at: str,
+) -> int:
+    """Upsert a batch of list-page summaries with a common ``seen_at`` timestamp.
+
+    Returns the number of rows processed.
+    """
+    count = 0
+    for s in summaries:
+        upsert_listing(
+            conn,
+            listing_id=s.listing_id,
+            last_seen_at=seen_at,
+            updated_at=s.updated_at,
+        )
+        count += 1
+    conn.commit()
+    return count
