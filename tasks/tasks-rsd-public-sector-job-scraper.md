@@ -47,11 +47,11 @@
   - [x] 2.5 Unit tests for pagination and ID stability using HTML fixtures.
 
 - [ ] 3.0 Organization keyword matching and normalization rules
-  - [ ] 3.1 Implement normalization: lowercase, whitespace collapse, punctuation removal, accent-insensitive.
-  - [ ] 3.2 Define keyword sets and synonyms: `Forsvar*` token prefix, `PST`/`Politiets sikkerhetstjeneste`, `NSM`/`Nasjonal sikkerhetsmyndighet`.
-  - [ ] 3.3 Implement matching priority: employer field first; title token fallback for `forsvar*` when state filter is applied.
-  - [ ] 3.4 Add optional fuzzy threshold (e.g., token set ratio ~0.8) after exact/startswith heuristics.
-  - [ ] 3.5 Unit tests covering typical and edge variants.
+  - [x] 3.1 Implement normalization: lowercase, whitespace collapse, punctuation removal, accent-insensitive.
+  - [x] 3.2 Define keyword sets and synonyms: `Forsvar*` token prefix, `PST`/`Politiets sikkerhetstjeneste`, `NSM`/`Nasjonal sikkerhetsmyndighet`.
+  - [x] 3.3 Implement matching priority: employer field first; title token fallback for `forsvar*` when state filter is applied.
+  - [x] 3.4 Add optional fuzzy threshold (e.g., token set ratio ~0.8) after exact/startswith heuristics.
+  - [x] 3.5 Unit tests covering typical and edge variants.
 
 - [ ] 4.0 Incremental scraping state store (SQLite) and change detection
   - [ ] 4.1 Define SQLite schema: `listing_id` PK, `last_seen_at`, `detail_fingerprint`, `updated_at`.
