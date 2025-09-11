@@ -149,3 +149,50 @@ def update_detail_fingerprint(
         (detail_fingerprint, listing_id),
     )
     conn.commit()
+
+
+# --- Selection of detail pages to fetch (4.4) ---
+
+def select_detail_candidates(
+    conn: sqlite3.Connection,
+    summaries: Iterable[ListingSummary],
+    *,
+    full: bool = False,
+) -> list[tuple[str, str]]:
+    """Select which listing IDs should have their detail pages fetched.
+
+    Guidance: call this BEFORE upserting discovery summaries so that changes in
+    ``updated_at`` can be detected relative to stored state.
+
+    Criteria when ``full`` is False:
+    - "new": row does not exist in DB
+    - "no_fingerprint": row exists but ``detail_fingerprint`` is NULL
+    - "updated_at_changed": summary ``updated_at`` differs from stored value
+
+    Returns a list of (listing_id, reason).
+    """
+    results: list[tuple[str, str]] = []
+    cur = conn.cursor()
+    for s in summaries:
+        if full:
+            results.append((s.listing_id, "full"))
+            continue
+
+        row = cur.execute(
+            "SELECT updated_at, detail_fingerprint FROM listings WHERE listing_id = ?",
+            (s.listing_id,),
+        ).fetchone()
+
+        if row is None:
+            results.append((s.listing_id, "new"))
+            continue
+
+        stored_updated_at, stored_fp = row[0], row[1]
+        if stored_fp is None:
+            results.append((s.listing_id, "no_fingerprint"))
+            continue
+
+        if s.updated_at and s.updated_at != stored_updated_at:
+            results.append((s.listing_id, "updated_at_changed"))
+
+    return results

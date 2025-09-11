@@ -57,7 +57,7 @@
   - [x] 4.1 Define SQLite schema: `listing_id` PK, `last_seen_at`, `detail_fingerprint`, `updated_at`.
   - [x] 4.2 Implement upsert on discovery to update `last_seen_at` and record summary metadata.
   - [x] 4.3 Compute `detail_fingerprint` (e.g., HTML hash) and track for change detection.
-  - [ ] 4.4 Select detail pages to fetch: new IDs, changed `updated_at`, or mismatched fingerprints; support `--full` override.
+  - [x] 4.4 Select detail pages to fetch: new IDs, changed `updated_at`, or mismatched fingerprints; support `--full` override.
   - [ ] 4.5 Unit tests for change selection logic using an in-memory SQLite DB.
 
 - [ ] 5.0 Detail page parsing for required fields
