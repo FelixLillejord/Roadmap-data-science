@@ -39,7 +39,7 @@
   - [x] 1.4 Prepare `data/public_state_jobs/` output directory (ensure exists at runtime).
   - [x] 1.5 Configure `pytest.ini` and minimal test scaffolding.
 
-- [ ] 2.0 Listing discovery with state-sector filtering and pagination
+- [x] 2.0 Listing discovery with state-sector filtering and pagination
   - [x] 2.1 Document search URL and query params; add builder to apply state-sector filter and open-listings filter.
   - [x] 2.2 Implement pagination loop to enumerate all result pages.
   - [x] 2.3 Extract `listing_id` (prefer site ID/UUID); else derive stable hash from `source_url`.
