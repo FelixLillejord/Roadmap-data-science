@@ -14,6 +14,8 @@ from selectolax.parser import HTMLParser
 from .selectors import DetailSelectors, DEFAULT_DETAIL_SELECTORS
 from .org_match import normalize_org_text
 from .config import get_logger
+from .jobcode_parse import extract_code_titles
+from .salary_parse import parse_salary_text
 
 
 log = get_logger("detail_parse")
@@ -78,3 +80,42 @@ def parse_detail_fields(
         "apply_deadline": apply_deadline,
     }
 
+
+def parse_job_codes_and_salaries(
+    html: str,
+    selectors: DetailSelectors | None = None,
+) -> list[dict]:
+    """Extract job codes and per-code salary ranges from detail HTML.
+
+    Returns a list of dicts with keys: job_code, job_title, salary_min, salary_max, salary_text.
+    """
+    sel = selectors or DEFAULT_DETAIL_SELECTORS
+    dom = HTMLParser(html)
+    blocks = []
+    if sel.job_code_blocks:
+        blocks = [n.text(separator=" ", strip=True) for n in dom.css(sel.job_code_blocks)]
+    if not blocks:
+        # fallback: consider whole page text (coarse)
+        blocks = [dom.text(separator=" ", strip=True)]
+
+    results: list[dict] = []
+    global_salary_text = _first_text(dom, sel.salary_text)
+    for block in blocks:
+        pairs = extract_code_titles(block)
+        if not pairs:
+            continue
+        # Try salary in the same block; else fallback to global
+        s_min, s_max = parse_salary_text(block)
+        if s_min is None and s_max is None and global_salary_text:
+            s_min, s_max = parse_salary_text(global_salary_text)
+        for code, maybe_title in pairs:
+            results.append(
+                {
+                    "job_code": code,
+                    "job_title": maybe_title,
+                    "salary_min": s_min,
+                    "salary_max": s_max,
+                    "salary_text": global_salary_text or block,
+                }
+            )
+    return results
