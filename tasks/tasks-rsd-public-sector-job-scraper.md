@@ -2,6 +2,8 @@
 
 - `scripts/public_state_jobs/cli.py` - CLI entrypoint handling args (`--full`, `--debug`, `--out-dir`).
 - `scripts/public_state_jobs/config.py` - Centralized configuration (org keywords, selectors, regex patterns, retry settings).
+  Includes logging setup (INFO default, DEBUG toggle).
+  Provides default output dir and ensure helper.
 - `scripts/public_state_jobs/selectors.py` - CSS/XPath selectors for list and detail pages grouped in one place.
 - `scripts/public_state_jobs/org_match.py` - Normalization + fuzzy/heuristic organization matching utilities.
 - `scripts/public_state_jobs/salary_parse.py` - Salary parsing and normalization to annual NOK min/max.
@@ -12,6 +14,8 @@
 - `scripts/public_state_jobs/models.py` - Dataclass models for listing-level and exploded row schemas.
 - `scripts/public_state_jobs/io.py` - Writers for Parquet/CSV and optional listing-level outputs.
 - `scripts/public_state_jobs/net.py` - Requests session, headers, robots check, rate limiting, retries with backoff/jitter.
+- `scripts/public_state_jobs/__init__.py` - Package initializer, version placeholder.
+- `requirements.txt` - Project dependencies for scraping, parsing, IO, and tests.
 - `tests/public_state_jobs/test_salary_parse.py` - Unit tests for salary parsing examples from the RSD.
 - `tests/public_state_jobs/test_jobcode_parse.py` - Unit tests for job code extraction and mapping.
 - `tests/public_state_jobs/test_org_match.py` - Unit tests for normalization and matching rules (Forsvar*, PST, NSM).
@@ -28,11 +32,11 @@
 ## Tasks
 
 - [ ] 1.0 Project setup and structure
-  - [ ] 1.1 Create package skeleton under `scripts/public_state_jobs/` with modules listed in Relevant Files.
-  - [ ] 1.2 Add `requirements.txt` (requests, selectolax or bs4+lxml, pandas, pyarrow, charset-normalizer, rapidfuzz [optional], pytest).
-  - [ ] 1.3 Initialize basic logging config (INFO default, DEBUG toggle).
-  - [ ] 1.4 Prepare `data/public_state_jobs/` output directory (ensure exists at runtime).
-  - [ ] 1.5 Configure `pytest.ini` and minimal test scaffolding.
+  - [x] 1.1 Create package skeleton under `scripts/public_state_jobs/` with modules listed in Relevant Files.
+  - [x] 1.2 Add `requirements.txt` (requests, selectolax or bs4+lxml, pandas, pyarrow, charset-normalizer, rapidfuzz [optional], pytest).
+  - [x] 1.3 Initialize basic logging config (INFO default, DEBUG toggle).
+  - [x] 1.4 Prepare `data/public_state_jobs/` output directory (ensure exists at runtime).
+  - [x] 1.5 Configure `pytest.ini` and minimal test scaffolding.
 
 - [ ] 2.0 Listing discovery with state-sector filtering and pagination
   - [ ] 2.1 Document search URL and query params; add builder to apply state-sector filter and open-listings filter.
