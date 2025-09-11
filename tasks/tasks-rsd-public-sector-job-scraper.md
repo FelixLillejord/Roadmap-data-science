@@ -62,7 +62,7 @@
 
 - [ ] 5.0 Detail page parsing for required fields
   - [x] 5.1 Centralize selectors for detail fields in `selectors.py`.
-  - [ ] 5.2 Extract: listing title, job title (if separate), employer (raw/normalized), locations, employment type/extent.
+  - [x] 5.2 Extract: listing title, job title (if separate), employer (raw/normalized), locations, employment type/extent.
   - [ ] 5.3 Extract all job codes and titles; parse per-code salary bounds and `salary_text`.
   - [ ] 5.4 Extract dates: published, updated (if present), application deadline/expiry; capture `source_url`.
   - [ ] 5.5 Tolerate missing fields; log selector misses in DEBUG; return structured defaults.
