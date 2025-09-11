@@ -44,7 +44,7 @@
   - [x] 2.2 Implement pagination loop to enumerate all result pages.
   - [x] 2.3 Extract `listing_id` (prefer site ID/UUID); else derive stable hash from `source_url`.
   - [x] 2.4 Capture summary fields from list pages (e.g., updated/published dates) when available.
-  - [ ] 2.5 Unit tests for pagination and ID stability using HTML fixtures.
+  - [x] 2.5 Unit tests for pagination and ID stability using HTML fixtures.
 
 - [ ] 3.0 Organization keyword matching and normalization rules
   - [ ] 3.1 Implement normalization: lowercase, whitespace collapse, punctuation removal, accent-insensitive.
