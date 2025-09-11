@@ -31,7 +31,7 @@
 
 ## Tasks
 
-- [ ] 1.0 Project setup and structure
+ - [x] 1.0 Project setup and structure
   - [x] 1.1 Create package skeleton under `scripts/public_state_jobs/` with modules listed in Relevant Files.
   - [x] 1.2 Add `requirements.txt` (requests, selectolax or bs4+lxml, pandas, pyarrow, charset-normalizer, rapidfuzz [optional], pytest).
   - [x] 1.3 Initialize basic logging config (INFO default, DEBUG toggle).
