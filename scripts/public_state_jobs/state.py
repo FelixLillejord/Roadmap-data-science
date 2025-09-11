@@ -6,9 +6,10 @@ logic. This file starts by defining the schema (4.1).
 
 from __future__ import annotations
 
+import hashlib
 import sqlite3
 from pathlib import Path
-from typing import Final, Iterable, Iterable, Optional
+from typing import Final, Iterable, Optional
 
 from .models import ListingSummary
 
@@ -91,7 +92,7 @@ def upsert_listing(
                 WHEN excluded.last_seen_at > COALESCE(listings.last_seen_at, '')
                 THEN excluded.last_seen_at ELSE listings.last_seen_at END,
             updated_at = COALESCE(excluded.updated_at, listings.updated_at),
-            detail_fingerprint = COALESCE(listings.detail_fingerprint, excluded.detail_fingerprint)
+            detail_fingerprint = COALESCE(excluded.detail_fingerprint, listings.detail_fingerprint)
         """
     )
     conn.execute(sql, (listing_id, last_seen_at, updated_at, detail_fingerprint))
@@ -118,3 +119,33 @@ def upsert_from_summaries(
         count += 1
     conn.commit()
     return count
+
+
+# --- Fingerprint computation and tracking (4.3) ---
+
+def compute_detail_fingerprint(html: str) -> str:
+    """Compute a stable fingerprint of detail HTML.
+
+    Uses SHA1 of UTF-8 bytes. Upstream callers may pre-normalize if needed.
+    """
+    return hashlib.sha1(html.encode("utf-8")).hexdigest()
+
+
+def get_detail_fingerprint(conn: sqlite3.Connection, listing_id: str) -> Optional[str]:
+    cur = conn.execute("SELECT detail_fingerprint FROM listings WHERE listing_id = ?", (listing_id,))
+    row = cur.fetchone()
+    return row[0] if row and row[0] is not None else None
+
+
+def update_detail_fingerprint(
+    conn: sqlite3.Connection,
+    *,
+    listing_id: str,
+    detail_fingerprint: str,
+) -> None:
+    """Update the stored fingerprint for a given listing."""
+    conn.execute(
+        "UPDATE listings SET detail_fingerprint = ? WHERE listing_id = ?",
+        (detail_fingerprint, listing_id),
+    )
+    conn.commit()
