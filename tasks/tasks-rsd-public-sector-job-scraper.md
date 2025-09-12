@@ -81,8 +81,8 @@
   - [x] 7.3 Validate schema consistency and dtypes across runs.
 
 - [ ] 8.0 Writers for Parquet and CSV outputs
-  - [ ] 8.1 Implement writers for `jobs_exploded.parquet` and `jobs_exploded.csv` under `data/public_state_jobs/`.
-  - [ ] 8.2 Ensure stable column order and types; handle timezone-aware timestamps (UTC ISO for `scraped_at`).
+  - [x] 8.1 Implement writers for `jobs_exploded.parquet` and `jobs_exploded.csv` under `data/public_state_jobs/`.
+  - [x] 8.2 Ensure stable column order and types; handle timezone-aware timestamps (UTC ISO for `scraped_at`).
   - [ ] 8.3 Optional: emit listing-level dataset for debugging.
 
 - [ ] 9.0 Networking: rate limiting, retries, headers, robots check
