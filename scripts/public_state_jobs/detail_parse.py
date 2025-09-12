@@ -26,6 +26,7 @@ def _first_text(dom: HTMLParser, selector: Optional[str]) -> Optional[str]:
         return None
     node = dom.css_first(selector)
     if not node:
+        log.debug("selector_miss: %s", selector)
         return None
     text = node.text(separator=" ", strip=True)
     return text or None

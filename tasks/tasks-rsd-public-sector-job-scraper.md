@@ -65,7 +65,7 @@
   - [x] 5.2 Extract: listing title, job title (if separate), employer (raw/normalized), locations, employment type/extent.
   - [x] 5.3 Extract all job codes and titles; parse per-code salary bounds and `salary_text`.
   - [x] 5.4 Extract dates: published, updated (if present), application deadline/expiry; capture `source_url`.
-  - [ ] 5.5 Tolerate missing fields; log selector misses in DEBUG; return structured defaults.
+  - [x] 5.5 Tolerate missing fields; log selector misses in DEBUG; return structured defaults.
   - [ ] 5.6 Unit tests with representative HTML snippets for all three orgs.
 
 - [ ] 6.0 Salary and job code parsing utilities
