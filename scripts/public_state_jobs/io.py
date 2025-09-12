@@ -73,3 +73,35 @@ def write_exploded_csv(
     df.to_csv(out_path, index=False)
     return out_path
 
+
+# Optional: listing-level dataset for debugging (8.3)
+def write_listings_parquet(
+    listings: Iterable[object],
+    *,
+    out_dir: Union[str, Path] | None = None,
+    filename: str = "jobs_listings.parquet",
+    scraped_at: str | None = None,
+) -> Path:
+    dicts = _rows_to_dicts(listings)
+    df = pd.DataFrame(dicts)
+    df = _apply_scraped_at(df, scraped_at)
+    target_dir = ensure_output_dir(out_dir or DEFAULT_OUTPUT_DIR)
+    out_path = Path(target_dir) / filename
+    df.to_parquet(out_path, index=False)
+    return out_path
+
+
+def write_listings_csv(
+    listings: Iterable[object],
+    *,
+    out_dir: Union[str, Path] | None = None,
+    filename: str = "jobs_listings.csv",
+    scraped_at: str | None = None,
+) -> Path:
+    dicts = _rows_to_dicts(listings)
+    df = pd.DataFrame(dicts)
+    df = _apply_scraped_at(df, scraped_at)
+    target_dir = ensure_output_dir(out_dir or DEFAULT_OUTPUT_DIR)
+    out_path = Path(target_dir) / filename
+    df.to_csv(out_path, index=False)
+    return out_path
