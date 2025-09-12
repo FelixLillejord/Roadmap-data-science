@@ -22,6 +22,9 @@ from .config import (
     SECTOR_STATE_VALUE,
 )
 from .models import ListingSummary
+from .config import get_logger
+
+log = get_logger("discovery")
 
 
 @dataclass(frozen=True)
@@ -60,7 +63,9 @@ def build_search_url(
         q[PARAM_QUERY] = p.query
     if extra:
         q.update(extra)
-    return urljoin(base_url, "?" + urlencode(q))
+    url = urljoin(base_url, "?" + urlencode(q))
+    log.debug("search_url_built: %s", url)
+    return url
 
 
 Html = str

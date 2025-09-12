@@ -101,6 +101,7 @@ def parse_job_codes_and_salaries(
         blocks = [n.text(separator=" ", strip=True) for n in dom.css(sel.job_code_blocks)]
     if not blocks:
         # fallback: consider whole page text (coarse)
+        log.debug("job_code_blocks_fallback_full_page")
         blocks = [dom.text(separator=" ", strip=True)]
 
     results: list[dict] = []
@@ -115,6 +116,7 @@ def parse_job_codes_and_salaries(
         if s_min is None and s_max is None and global_salary_text:
             s_min, s_max = parse_salary_text(global_salary_text)
             using_global = True
+            log.debug("salary_fallback_global_text")
         for code, maybe_title in pairs:
             results.append(
                 {
@@ -126,4 +128,6 @@ def parse_job_codes_and_salaries(
                     "is_shared_salary": using_global,
                 }
             )
+        if not pairs:
+            log.debug("no_job_codes_in_block")
     return results

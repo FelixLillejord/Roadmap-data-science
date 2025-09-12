@@ -9,6 +9,10 @@ from __future__ import annotations
 import re
 from typing import Iterable, List, Optional, Tuple
 
+from .config import get_logger
+
+log = get_logger("jobcode_parse")
+
 CODE_PATTERNS = (
     r"(?:stillingskode|kode)\s*(?P<code>\d{3,5})\b",
     r"\b(?P<code>\d{3,5})\b",
@@ -62,4 +66,8 @@ def extract_code_titles(text: str) -> List[Tuple[str, Optional[str]]]:
         if code not in seen:
             codes.append(code)
             seen.add(code)
+    if codes:
+        log.debug("code_titles_fallback_keyword_only codes=%s", codes)
+    else:
+        log.debug("code_titles_no_matches")
     return [(c, None) for c in codes]

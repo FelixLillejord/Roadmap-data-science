@@ -98,7 +98,7 @@
 
 - [ ] 11.0 Logging and run summaries
   - [x] 11.1 Implement INFO-level summary: discovered, new, updated, unchanged, failed.
-  - [ ] 11.2 Add DEBUG logs for selector misses and parsing fallbacks.
+  - [x] 11.2 Add DEBUG logs for selector misses and parsing fallbacks.
 
 - [ ] 12.0 Unit tests for parsing and core logic
   - [ ] 12.1 Add fixtures for representative list/detail HTML.
