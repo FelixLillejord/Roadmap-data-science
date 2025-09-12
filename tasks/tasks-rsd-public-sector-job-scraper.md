@@ -110,7 +110,7 @@
   - [x] 13.1 Implement a validation helper to compute parsing success on a sample (codes/salaries presence, schema validity).
   - [x] 13.2 Measure incremental efficiency on second run (detail fetch reduction) with cached state.
 
-- [ ] 14.0 Documentation: usage, config, maintenance notes
+- [x] 14.0 Documentation: usage, config, maintenance notes
   - [x] 14.1 Write README with setup, CLI usage, and output schema.
   - [x] 14.2 Document configuration knobs (keywords, fuzzy threshold, selectors, regexes).
-  - [ ] 14.3 Add maintenance tips for updating selectors and tests when site changes.
+  - [x] 14.3 Add maintenance tips for updating selectors and tests when site changes.

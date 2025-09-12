@@ -123,3 +123,19 @@ See `scripts/public_state_jobs/models.py` for `EXPLODED_COLUMNS` and dtypes.
 
 - Selectors are placeholders; adjust `DEFAULT_LIST_SELECTORS` and `DEFAULT_DETAIL_SELECTORS` to the real site
 - Respect `robots.txt` and the target site’s terms of use
+
+## Maintenance Tips
+
+When the target site changes:
+- Start with selectors:
+  - Update `DEFAULT_LIST_SELECTORS` and `DEFAULT_DETAIL_SELECTORS` to match the new DOM.
+  - Use `--debug` to surface `selector_miss` logs during runs.
+- Add/refresh fixtures:
+  - Create/update HTML samples under `tests/fixtures/` that reflect current pages.
+  - Adjust unit tests in `tests/public_state_jobs/` to cover new patterns.
+- Keep parsing robust:
+  - For salaries, prefer resilient regex (spaces, dots, NBSP variants, en dash).
+  - For codes, rely on `stillingskode|kode` before falling back to loose numbers.
+- Validate with helpers:
+  - Use `compute_exploded_metrics` to check job codes/salaries presence and schema.
+  - Run a two-pass incremental test with `measure_incremental_efficiency` to confirm fewer detail fetches on re-run.
