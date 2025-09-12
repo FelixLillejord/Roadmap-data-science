@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, asdict
 from typing import Optional, List, Dict, Any, Iterable
+import pandas as pd
+from pandas import DataFrame
 
 
 @dataclass(frozen=True)
@@ -109,3 +111,72 @@ def explode_listing(
             )
         )
     return rows
+
+
+# ---- Schema utilities for exploded rows (7.3) ----
+
+EXPLODED_COLUMNS: List[str] = [
+    "listing_id",
+    "job_code",
+    "job_title",
+    "employer_normalized",
+    "salary_min",
+    "salary_max",
+    "salary_text",
+    "is_shared_salary",
+    "published_at",
+    "updated_at",
+    "apply_deadline",
+    "source_url",
+    "scraped_at",
+]
+
+EXPLODED_DTYPES: Dict[str, Any] = {
+    "listing_id": "string",
+    "job_code": "string",
+    "job_title": "string",
+    "employer_normalized": "string",
+    "salary_min": "Int64",
+    "salary_max": "Int64",
+    "salary_text": "string",
+    "is_shared_salary": "boolean",
+    "published_at": "string",
+    "updated_at": "string",
+    "apply_deadline": "string",
+    "source_url": "string",
+    "scraped_at": "string",
+}
+
+
+def to_exploded_dataframe(rows: Iterable[Dict[str, Any] | ExplodedJobRow]) -> DataFrame:
+    """Create a pandas DataFrame with stable column order and dtypes.
+
+    Accepts dictionaries or ExplodedJobRow objects. Missing columns are added
+    with NA values and dtypes are coerced to pandas nullable types.
+    """
+    dict_rows: List[Dict[str, Any]] = []
+    for r in rows:
+        if isinstance(r, ExplodedJobRow):
+            dict_rows.append(r.to_dict())
+        else:
+            dict_rows.append(dict(r))
+
+    df = pd.DataFrame(dict_rows)
+    # Add any missing columns
+    for col in EXPLODED_COLUMNS:
+        if col not in df.columns:
+            df[col] = pd.NA
+    # Reorder
+    df = df[EXPLODED_COLUMNS]
+
+    # Coerce dtypes
+    for col, dtype in EXPLODED_DTYPES.items():
+        if dtype == "Int64":
+            df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
+        elif dtype == "boolean":
+            df[col] = df[col].astype("boolean")
+        elif dtype == "string":
+            df[col] = df[col].astype("string")
+        else:
+            df[col] = df[col].astype(dtype)
+    return df
