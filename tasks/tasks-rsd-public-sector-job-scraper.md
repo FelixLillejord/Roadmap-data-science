@@ -100,10 +100,10 @@
   - [x] 11.1 Implement INFO-level summary: discovered, new, updated, unchanged, failed.
   - [x] 11.2 Add DEBUG logs for selector misses and parsing fallbacks.
 
-- [ ] 12.0 Unit tests for parsing and core logic
-  - [ ] 12.1 Add fixtures for representative list/detail HTML.
-  - [ ] 12.2 Tests for org matching, salary parsing, job code extraction, and explosion logic.
-  - [ ] 12.3 Basic integration test for a small mocked crawl.
+- [x] 12.0 Unit tests for parsing and core logic
+  - [x] 12.1 Add fixtures for representative list/detail HTML.
+  - [x] 12.2 Tests for org matching, salary parsing, job code extraction, and explosion logic.
+  - [x] 12.3 Basic integration test for a small mocked crawl.
 
 - [ ] 13.0 Validation against success metrics
   - [ ] 13.1 Implement a validation helper to compute parsing success on a sample (codes/salaries presence, schema validity).
