@@ -179,4 +179,20 @@ class PoliteFetcher:
             log.info("robots_disallow_skip: %s", url)
             return None
         self._sleep_if_needed(host)
-        return get_with_retries(self.session, url, **kwargs)
+        try:
+            resp = get_with_retries(self.session, url, **kwargs)
+        except Exception as exc:
+            log.warning("http_fetch_failed: %s (%s)", url, exc)
+            return None
+        # Treat non-2xx as failures to skip
+        status = resp.status_code
+        if 200 <= status < 300:
+            return resp
+        # Permanent failure if 4xx (not 429), else give up after retries
+        if status == 429:
+            log.warning("http_give_up_after_retries: %s status=%s", url, status)
+        elif 400 <= status < 500:
+            log.info("http_skip_permanent_4xx: %s status=%s", url, status)
+        else:
+            log.warning("http_give_up_after_retries: %s status=%s", url, status)
+        return None
