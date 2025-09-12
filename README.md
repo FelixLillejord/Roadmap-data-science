@@ -78,10 +78,40 @@ See `scripts/public_state_jobs/models.py` for `EXPLODED_COLUMNS` and dtypes.
 
 ## Configuration Notes
 
-- Selectors: `scripts/public_state_jobs/selectors.py` (`DEFAULT_*_SELECTORS`)
-- Discovery params: `scripts/public_state_jobs/config.py`
-- Org matching knobs: `scripts/public_state_jobs/org_match.py` (`fuzzy_threshold` param to `match_org`)
-- Salary parsing: `scripts/public_state_jobs/salary_parse.py` (≥6-digit inference, avoids job-code collisions)
+- Selectors (centralized): `scripts/public_state_jobs/selectors.py`
+  - `DEFAULT_LIST_SELECTORS`: `.item`, `.link`, optional `.published_at`/`.updated_at`, optional `id_candidates` selector
+  - `DEFAULT_DETAIL_SELECTORS`: `title`, `employer`, `locations`, `employment_type`, `extent`, `salary_text`, `job_code_blocks`, `published_at`, `updated_at`, `apply_deadline`
+  - Adjust these to the target site’s DOM; the rest of the pipeline remains stable
+
+- Discovery/config: `scripts/public_state_jobs/config.py` and `discovery.py`
+  - URL builder constants: `SEARCH_BASE_URL`, `PARAM_SECTOR`, `PARAM_OPEN_ONLY`, `PARAM_PAGE`, `PARAM_QUERY`
+  - `build_search_url(params, extra)`: pass site‑specific params via `extra`
+  - CLI flags: `--base-url`, `--max-pages`
+
+- Org matching: `scripts/public_state_jobs/org_match.py`
+  - Canonical tags: `ORG_FORSVAR`, `ORG_PST`, `ORG_NSM`
+  - Synonyms map: `ORG_SYNONYMS` and prefix rule `TOKEN_PREFIX_FORSVAR`
+  - Matching API: `match_org(employer, title, state_sector_applied=False, fuzzy_threshold=None)`
+    - Set `fuzzy_threshold` (e.g., `0.8`) to enable optional fuzzy matching
+
+- Salary parsing: `scripts/public_state_jobs/salary_parse.py`
+  - ≥6‑digit inference: avoids collisions with 3–5 digit job codes
+  - Handles ranges with hyphen/en dash; thousand separators (space, dot, comma, NBSP variants)
+  - API: `parse_salary_text(text) -> (min|max|None)`, returns `(None, None)` for qualitative text (e.g., “etter avtale”)
+
+- Networking: `scripts/public_state_jobs/net.py`
+  - Session: `build_session(user_agent=None, headers=None)`
+  - Retries: `get_with_retries(..., max_attempts=3, backoff_base=0.5, backoff_factor=2.0, jitter_max=0.25)`
+  - Politeness/robots: `PoliteFetcher(session, delay_seconds=1.0, respect_robots=True)`; CLI `--delay`, `--no-robots`
+
+- State DB: `scripts/public_state_jobs/state.py`
+  - File name: `public_state_jobs.sqlite3` (created under `--out-dir`)
+  - Core functions: `ensure_db`, `upsert_from_summaries`, `select_detail_candidates`, `compute_detail_fingerprint`
+
+- Output: `scripts/public_state_jobs/io.py`
+  - Exploded writers: `write_exploded_parquet/csv(rows, out_dir=..., filename=..., scraped_at=...)`
+  - Optional listing‑level writers: `write_listings_parquet/csv(...)`
+  - CLI flags: `--no-parquet`, `--no-csv`; default output dir `data/public_state_jobs/`
 
 ## Development
 
@@ -93,4 +123,3 @@ See `scripts/public_state_jobs/models.py` for `EXPLODED_COLUMNS` and dtypes.
 
 - Selectors are placeholders; adjust `DEFAULT_LIST_SELECTORS` and `DEFAULT_DETAIL_SELECTORS` to the real site
 - Respect `robots.txt` and the target site’s terms of use
-
