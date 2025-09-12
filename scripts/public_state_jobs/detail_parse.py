@@ -42,6 +42,8 @@ def _split_locations(text: Optional[str]) -> Optional[list[str]]:
 def parse_detail_fields(
     html: str,
     selectors: DetailSelectors | None = None,
+    *,
+    source_url: Optional[str] = None,
 ) -> dict:
     """Parse core fields from a detail page.
 
@@ -49,6 +51,7 @@ def parse_detail_fields(
     - title, job_title, employer_raw, employer_normalized
     - locations (list[str] or None), employment_type, extent
     - salary_text, published_at, updated_at, apply_deadline
+    - source_url
     """
     sel = selectors or DEFAULT_DETAIL_SELECTORS
     dom = HTMLParser(html)
@@ -78,6 +81,7 @@ def parse_detail_fields(
         "published_at": published_at,
         "updated_at": updated_at,
         "apply_deadline": apply_deadline,
+        "source_url": source_url,
     }
 
 
