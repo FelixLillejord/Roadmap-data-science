@@ -34,6 +34,7 @@ Common flags:
 - `--delay S`: Per-host politeness delay (seconds, default 1.0)
 - `--no-robots`: Do not respect robots.txt (not recommended)
 - `--no-parquet` / `--no-csv`: Control output formats
+- `--validate`: Compute and log parsing metrics for the exploded rows
 
 Outputs are written under `data/public_state_jobs/` by default, with a state DB:
 - `public_state_jobs.sqlite3` (incremental state)

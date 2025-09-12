@@ -32,6 +32,7 @@ from .state import (
 from .detail_parse import parse_detail_fields, parse_job_codes_and_salaries
 from .models import ListingRecord, explode_listing
 from .io import write_exploded_parquet, write_exploded_csv, write_listings_parquet, write_listings_csv
+from .validation import compute_exploded_metrics
 
 
 log = get_logger("cli")
@@ -82,6 +83,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument("--no-robots", action="store_true", help="Do not respect robots.txt (not recommended)")
     p.add_argument("--no-parquet", action="store_true", help="Skip writing Parquet output")
     p.add_argument("--no-csv", action="store_true", help="Skip writing CSV output")
+    p.add_argument("--validate", action="store_true", help="Compute and log parsing metrics for exploded rows")
     return p
 
 
@@ -201,6 +203,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not args.no_csv:
         write_exploded_csv([r.to_dict() for r in exploded_rows], out_dir=out_dir, scraped_at=seen_at)
         write_listings_csv([r.to_dict() for r in listing_records], out_dir=out_dir, scraped_at=seen_at)
+
+    # Optional validation metrics on in-memory rows
+    if args.validate:
+        metrics = compute_exploded_metrics([r.to_dict() for r in exploded_rows])
+        log.info(
+            "metrics: total=%d codes_present=%d(%.1f%%) salary_any=%d(%.1f%%) schema_ok=%s",
+            metrics["total_rows"],
+            metrics["codes_present"],
+            metrics["codes_pct"] * 100.0,
+            metrics["salary_any_present"],
+            metrics["salary_any_pct"] * 100.0,
+            metrics["schema_ok"],
+        )
 
     # Summary and exit code
     log.info(
