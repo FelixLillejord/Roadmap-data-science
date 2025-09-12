@@ -115,5 +115,5 @@
   - [x] 14.2 Document configuration knobs (keywords, fuzzy threshold, selectors, regexes).
   - [x] 14.3 Add maintenance tips for updating selectors and tests when site changes.
 
-- [ ] 15.0 Validation polish
-  - [ ] 15.1 Add CLI `--validate` flag to log parsing metrics after a run.
+- [x] 15.0 Validation polish
+  - [x] 15.1 Add CLI `--validate` flag to log parsing metrics after a run.
