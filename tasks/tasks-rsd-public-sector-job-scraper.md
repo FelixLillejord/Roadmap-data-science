@@ -75,28 +75,28 @@
   - [x] 6.4 Map shared salary ranges across multiple codes with `is_shared_salary = true` when no explicit mapping.
   - [x] 6.5 Unit tests using examples from the RSD acceptance criteria.
 
-- [ ] 7.0 Exploded data model and output schema
+- [x] 7.0 Exploded data model and output schema
   - [x] 7.1 Define dataclasses/models for listing-level and exploded rows (`listing_id` × `job_code`).
   - [x] 7.2 Implement transform to explode per job code with correct salary mapping.
   - [x] 7.3 Validate schema consistency and dtypes across runs.
 
-- [ ] 8.0 Writers for Parquet and CSV outputs
+- [x] 8.0 Writers for Parquet and CSV outputs
   - [x] 8.1 Implement writers for `jobs_exploded.parquet` and `jobs_exploded.csv` under `data/public_state_jobs/`.
   - [x] 8.2 Ensure stable column order and types; handle timezone-aware timestamps (UTC ISO for `scraped_at`).
   - [x] 8.3 Optional: emit listing-level dataset for debugging.
 
-- [ ] 9.0 Networking: rate limiting, retries, headers, robots check
+- [x] 9.0 Networking: rate limiting, retries, headers, robots check
   - [x] 9.1 Create session with headers and reasonable user-agent.
   - [x] 9.2 Implement retries with exponential backoff and jitter for 429/5xx/timeouts (max 3 attempts).
   - [x] 9.3 Add politeness delay and respect `robots.txt` if accessible; avoid fetching blocked paths.
   - [x] 9.4 Log and skip permanently failing pages; continue processing others.
 
-- [ ] 10.0 CLI interface and configuration options (e.g., --full, --debug)
+- [x] 10.0 CLI interface and configuration options (e.g., --full, --debug)
   - [x] 10.1 Implement `argparse` CLI with `--full`, `--debug`, `--out-dir`.
   - [x] 10.2 Wire CLI to discovery, incremental selection, detail parsing, and writers.
   - [x] 10.3 Add exit codes and error messages for common failures.
 
-- [ ] 11.0 Logging and run summaries
+- [x] 11.0 Logging and run summaries
   - [x] 11.1 Implement INFO-level summary: discovered, new, updated, unchanged, failed.
   - [x] 11.2 Add DEBUG logs for selector misses and parsing fallbacks.
 
