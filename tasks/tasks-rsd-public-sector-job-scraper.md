@@ -97,7 +97,7 @@
   - [x] 10.3 Add exit codes and error messages for common failures.
 
 - [ ] 11.0 Logging and run summaries
-  - [ ] 11.1 Implement INFO-level summary: discovered, new, updated, unchanged, failed.
+  - [x] 11.1 Implement INFO-level summary: discovered, new, updated, unchanged, failed.
   - [ ] 11.2 Add DEBUG logs for selector misses and parsing fallbacks.
 
 - [ ] 12.0 Unit tests for parsing and core logic

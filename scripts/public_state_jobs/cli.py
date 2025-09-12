@@ -125,7 +125,24 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     candidates = select_detail_candidates(conn, summaries, full=args.full)
     # Upsert discovery summaries
     upsert_from_summaries(conn, summaries, seen_at=seen_at)
-    log.info("detail_candidates=%d", len(candidates))
+    # Compute discovery summary counts
+    reason_counts = {}
+    for _id, reason in candidates:
+        reason_counts[reason] = reason_counts.get(reason, 0) + 1
+    new_count = reason_counts.get("new", 0)
+    updated_count = reason_counts.get("updated_at_changed", 0)
+    pending_fp_count = reason_counts.get("no_fingerprint", 0)
+    full_count = reason_counts.get("full", 0)
+    unchanged = max(0, len(summaries) - (new_count + updated_count + pending_fp_count + full_count))
+    log.info(
+        "discovery_summary: discovered=%d new=%d updated=%d unchanged=%d pending_fp=%d candidates=%d",
+        len(summaries),
+        new_count,
+        updated_count,
+        unchanged,
+        pending_fp_count,
+        len(candidates),
+    )
 
     # Fetch detail pages for candidates
     exploded_rows = []
@@ -187,12 +204,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     # Summary and exit code
     log.info(
-        "run_summary: pages=%d summaries=%d candidates=%d exploded_rows=%d failures=%d",
+        "run_summary: pages=%d discovered=%d new=%d updated=%d unchanged=%d failures=%d rows=%d",
         discovered_pages,
         len(summaries),
-        len(candidates),
-        len(exploded_rows),
+        new_count,
+        updated_count,
+        unchanged,
         failures,
+        len(exploded_rows),
     )
     return 1 if failures > 0 else 0
 
