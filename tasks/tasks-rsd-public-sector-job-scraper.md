@@ -15,6 +15,7 @@
 - `scripts/public_state_jobs/models.py` - Dataclass models for listing-level and exploded row schemas.
 - `scripts/public_state_jobs/io.py` - Writers for Parquet/CSV and optional listing-level outputs.
 - `scripts/public_state_jobs/net.py` - Requests session, headers, robots check, rate limiting, retries with backoff/jitter.
+- `scripts/public_state_jobs/validation.py` - Validation helpers: parsing metrics and incremental efficiency.
 - `scripts/public_state_jobs/__init__.py` - Package initializer, version placeholder.
 - `requirements.txt` - Project dependencies for scraping, parsing, IO, and tests.
 - `tests/public_state_jobs/test_salary_parse.py` - Unit tests for salary parsing examples from the RSD.
@@ -105,9 +106,9 @@
   - [x] 12.2 Tests for org matching, salary parsing, job code extraction, and explosion logic.
   - [x] 12.3 Basic integration test for a small mocked crawl.
 
-- [ ] 13.0 Validation against success metrics
-  - [ ] 13.1 Implement a validation helper to compute parsing success on a sample (codes/salaries presence, schema validity).
-  - [ ] 13.2 Measure incremental efficiency on second run (detail fetch reduction) with cached state.
+- [x] 13.0 Validation against success metrics
+  - [x] 13.1 Implement a validation helper to compute parsing success on a sample (codes/salaries presence, schema validity).
+  - [x] 13.2 Measure incremental efficiency on second run (detail fetch reduction) with cached state.
 
 - [ ] 14.0 Documentation: usage, config, maintenance notes
   - [ ] 14.1 Write README with setup, CLI usage, and output schema.
