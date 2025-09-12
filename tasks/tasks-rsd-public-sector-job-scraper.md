@@ -92,9 +92,9 @@
   - [x] 9.4 Log and skip permanently failing pages; continue processing others.
 
 - [ ] 10.0 CLI interface and configuration options (e.g., --full, --debug)
-  - [ ] 10.1 Implement `argparse` CLI with `--full`, `--debug`, `--out-dir`.
-  - [ ] 10.2 Wire CLI to discovery, incremental selection, detail parsing, and writers.
-  - [ ] 10.3 Add exit codes and error messages for common failures.
+  - [x] 10.1 Implement `argparse` CLI with `--full`, `--debug`, `--out-dir`.
+  - [x] 10.2 Wire CLI to discovery, incremental selection, detail parsing, and writers.
+  - [x] 10.3 Add exit codes and error messages for common failures.
 
 - [ ] 11.0 Logging and run summaries
   - [ ] 11.1 Implement INFO-level summary: discovered, new, updated, unchanged, failed.
