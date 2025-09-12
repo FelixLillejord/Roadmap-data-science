@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, asdict
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Iterable
 
 
 @dataclass(frozen=True)
@@ -74,3 +74,38 @@ class ExplodedJobRow:
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
+
+
+def explode_listing(
+    *,
+    listing_id: str,
+    source_url: str,
+    fields: Dict[str, Any],
+    code_rows: Iterable[Dict[str, Any]],
+    scraped_at: Optional[str] = None,
+) -> List[ExplodedJobRow]:
+    """Explode a listing into per-job-code rows using parsed fields and codes.
+
+    - ``fields`` should come from parse_detail_fields
+    - ``code_rows`` should come from parse_job_codes_and_salaries
+    """
+    rows: List[ExplodedJobRow] = []
+    for cr in code_rows:
+        rows.append(
+            ExplodedJobRow(
+                listing_id=listing_id,
+                job_code=str(cr.get("job_code")),
+                job_title=cr.get("job_title"),
+                employer_normalized=fields.get("employer_normalized"),
+                salary_min=cr.get("salary_min"),
+                salary_max=cr.get("salary_max"),
+                salary_text=cr.get("salary_text"),
+                is_shared_salary=bool(cr.get("is_shared_salary", False)),
+                published_at=fields.get("published_at"),
+                updated_at=fields.get("updated_at"),
+                apply_deadline=fields.get("apply_deadline"),
+                source_url=source_url,
+                scraped_at=scraped_at,
+            )
+        )
+    return rows

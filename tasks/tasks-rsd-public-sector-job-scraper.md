@@ -77,7 +77,7 @@
 
 - [ ] 7.0 Exploded data model and output schema
   - [x] 7.1 Define dataclasses/models for listing-level and exploded rows (`listing_id` × `job_code`).
-  - [ ] 7.2 Implement transform to explode per job code with correct salary mapping.
+  - [x] 7.2 Implement transform to explode per job code with correct salary mapping.
   - [ ] 7.3 Validate schema consistency and dtypes across runs.
 
 - [ ] 8.0 Writers for Parquet and CSV outputs
