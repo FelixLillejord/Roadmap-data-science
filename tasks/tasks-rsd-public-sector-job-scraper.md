@@ -60,13 +60,13 @@
   - [x] 4.4 Select detail pages to fetch: new IDs, changed `updated_at`, or mismatched fingerprints; support `--full` override.
   - [x] 4.5 Unit tests for change selection logic using an in-memory SQLite DB.
 
-- [ ] 5.0 Detail page parsing for required fields
+- [x] 5.0 Detail page parsing for required fields
   - [x] 5.1 Centralize selectors for detail fields in `selectors.py`.
   - [x] 5.2 Extract: listing title, job title (if separate), employer (raw/normalized), locations, employment type/extent.
   - [x] 5.3 Extract all job codes and titles; parse per-code salary bounds and `salary_text`.
   - [x] 5.4 Extract dates: published, updated (if present), application deadline/expiry; capture `source_url`.
   - [x] 5.5 Tolerate missing fields; log selector misses in DEBUG; return structured defaults.
-  - [ ] 5.6 Unit tests with representative HTML snippets for all three orgs.
+  - [x] 5.6 Unit tests with representative HTML snippets for all three orgs.
 
 - [ ] 6.0 Salary and job code parsing utilities
   - [ ] 6.1 Implement regex patterns covering hyphen/en dash, `kr/kr.`, spaces/dots as thousand separators, optional punctuation.

@@ -29,7 +29,9 @@ def parse_salary_text(text: str) -> Tuple[Optional[int], Optional[int]]:
     t = text.lower()
     if "etter avtale" in t or "etter avtale." in t:
         return None, None
-
+    # Heuristic: avoid treating job codes as salary by requiring currency context
+    if "kr" not in t and "nok" not in t:
+        return None, None
     m = _RANGE_RE.search(t)
     if m:
         lo = _to_int(m.group("lo"))
@@ -44,4 +46,3 @@ def parse_salary_text(text: str) -> Tuple[Optional[int], Optional[int]]:
         return val, val
 
     return None, None
-
