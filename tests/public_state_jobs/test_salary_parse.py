@@ -15,8 +15,11 @@ def test_salary_qualitative_returns_none():
     assert parse_salary_text("Lønn etter avtale") == (None, None)
 
 
-def test_salary_requires_currency_context():
-    # Should not parse a bare number lacking kr/nok
-    assert parse_salary_text("Lønn 500 000") == (None, None)
-    # But NOK counts as currency marker
+def test_salary_infers_by_digit_count():
+    # Parses without currency when >= 6 digits
+    assert parse_salary_text("Lønn 500 000") == (500000, 500000)
+    assert parse_salary_text("500 000") == (500000, 500000)
+    # NOK remains supported
     assert parse_salary_text("NOK 500 000") == (500000, 500000)
+    # 5-digit numbers should not be treated as salary
+    assert parse_salary_text("Lønn 12345") == (None, None)
