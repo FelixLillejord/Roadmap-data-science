@@ -69,7 +69,7 @@
   - [x] 5.6 Unit tests with representative HTML snippets for all three orgs.
 
 - [ ] 6.0 Salary and job code parsing utilities
-  - [ ] 6.1 Implement regex patterns covering hyphen/en dash, `kr/kr.`, spaces/dots as thousand separators, optional punctuation.
+  - [x] 6.1 Implement regex patterns covering hyphen/en dash, `kr/kr.`, spaces/dots as thousand separators, optional punctuation.
   - [ ] 6.2 Normalize to integers (NOK annual) and handle ranges; set nulls when qualitative only ("etter avtale").
   - [ ] 6.3 Implement job code regex `kode\\s*(\\d{3,5})` with title capture when nearby.
   - [ ] 6.4 Map shared salary ranges across multiple codes with `is_shared_salary = true` when no explicit mapping.

@@ -10,13 +10,18 @@ import re
 from typing import Optional, Tuple
 
 # Patterns tolerate hyphen or en dash and various thousand separators
-_NUM = r"\d{1,3}(?:[ .]\d{3})+|\d{4,}"
-_RANGE_RE = re.compile(rf"(?P<lo>{_NUM})\s*[-–]\s*(?P<hi>{_NUM})")
-_SINGLE_RE = re.compile(rf"(?P<only>{_NUM})")
+# Accept optional currency markers like "kr" or "kr." before numbers
+_NUM = r"\d{1,3}(?:[ .\u00A0\u202F\u2009]\d{3})+|\d{4,}"
+_CURR_OPT = r"(?:kr\.?|nok)?\s*"
+_RANGE_RE = re.compile(rf"{_CURR_OPT}(?P<lo>{_NUM})\s*[-–]\s*{_CURR_OPT}(?P<hi>{_NUM})", re.IGNORECASE)
+_SINGLE_RE = re.compile(rf"{_CURR_OPT}(?P<only>{_NUM})", re.IGNORECASE)
 
 
 def _to_int(num: str) -> int:
-    return int(num.replace(" ", "").replace(".", ""))
+    # Remove common thousand separators: space, dot, NBSP, narrow NBSP, thin space, comma
+    for ch in (" ", ".", ",", "\u00A0", "\u202F", "\u2009"):
+        num = num.replace(ch, "")
+    return int(num)
 
 
 def parse_salary_text(text: str) -> Tuple[Optional[int], Optional[int]]:
