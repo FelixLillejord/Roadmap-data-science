@@ -38,6 +38,7 @@ def test_detail_parse_forsvar_example():
     for r in rows:
         assert r["salary_min"] == 600000
         assert r["salary_max"] == 750000
+        assert r["is_shared_salary"] is True
 
 
 def test_detail_parse_pst_example():
@@ -79,3 +80,25 @@ def test_detail_parse_nsm_example_single_value_salary():
     assert rows[0]["job_code"] == "1364"
     assert rows[0]["salary_min"] == 650000 and rows[0]["salary_max"] == 650000
 
+
+def test_detail_block_salary_not_shared():
+    html = """
+    <html>
+      <body>
+        <div class="job-codes">
+          <p>kode 1111 – Konsulent – Lønn: kr 500 000 – 600 000</p>
+        </div>
+      </body>
+    </html>
+    """
+    rows = parse_job_codes_and_salaries(html)
+    assert rows == [
+        {
+            "job_code": "1111",
+            "job_title": "Konsulent – Lønn: kr 500 000 – 600 000",
+            "salary_min": 500000,
+            "salary_max": 600000,
+            "salary_text": "kode 1111 – Konsulent – Lønn: kr 500 000 – 600 000",
+            "is_shared_salary": False,
+        }
+    ]

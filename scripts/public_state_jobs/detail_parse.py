@@ -111,8 +111,10 @@ def parse_job_codes_and_salaries(
             continue
         # Try salary in the same block; else fallback to global
         s_min, s_max = parse_salary_text(block)
+        using_global = False
         if s_min is None and s_max is None and global_salary_text:
             s_min, s_max = parse_salary_text(global_salary_text)
+            using_global = True
         for code, maybe_title in pairs:
             results.append(
                 {
@@ -120,7 +122,8 @@ def parse_job_codes_and_salaries(
                     "job_title": maybe_title,
                     "salary_min": s_min,
                     "salary_max": s_max,
-                    "salary_text": global_salary_text or block,
+                    "salary_text": (global_salary_text if using_global else block).strip() if (global_salary_text or block) else None,
+                    "is_shared_salary": using_global,
                 }
             )
     return results

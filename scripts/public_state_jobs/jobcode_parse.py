@@ -15,6 +15,7 @@ CODE_PATTERNS = (
 )
 
 _CODE_RES = [re.compile(p, flags=re.IGNORECASE) for p in CODE_PATTERNS]
+_KEYED_CODE_RE = re.compile(r"(?:stillingskode|kode)\s*(?P<code>\d{3,5})\b", re.IGNORECASE)
 
 
 def extract_job_codes(text: str) -> List[str]:
@@ -31,7 +32,10 @@ def extract_job_codes(text: str) -> List[str]:
     return sorted(seen)
 
 
-_TITLE_AFTER_CODE_RE = re.compile(r"\b(?:stillingskode|kode)\s*(?P<code>\d{3,5})\s*[-:–]\s*(?P<title>[^\n\r]+)", re.IGNORECASE)
+_TITLE_AFTER_CODE_RE = re.compile(
+    r"\b(?:stillingskode|kode)\s*(?P<code>\d{3,5})\s*[-:–]\s*(?P<title>.*?)(?=(?:\s*(?:stillingskode|kode)\s*\d{3,5}\b|$))",
+    re.IGNORECASE | re.DOTALL,
+)
 
 
 def extract_code_titles(text: str) -> List[Tuple[str, Optional[str]]]:
@@ -39,17 +43,23 @@ def extract_code_titles(text: str) -> List[Tuple[str, Optional[str]]]:
 
     Falls back to (code, None) for codes without an obvious title suffix.
     """
+    # Prefer explicit code-title matches
     pairs: list[Tuple[str, Optional[str]]] = []
-    codes = extract_job_codes(text)
-    title_map: dict[str, Optional[str]] = {c: None for c in codes}
-
+    seen: set[str] = set()
     for m in _TITLE_AFTER_CODE_RE.finditer(text):
         code = m.group("code")
         title = (m.group("title") or "").strip()
-        if code in title_map:
-            title_map[code] = title or None
+        if code not in seen:
+            pairs.append((code, title or None))
+            seen.add(code)
+    if pairs:
+        return pairs
 
-    for c in codes:
-        pairs.append((c, title_map.get(c)))
-    return pairs
-
+    # Fallback: codes preceded by known keywords, without titles
+    codes = []
+    for m in _KEYED_CODE_RE.finditer(text):
+        code = m.group("code")
+        if code not in seen:
+            codes.append(code)
+            seen.add(code)
+    return [(c, None) for c in codes]

@@ -68,12 +68,12 @@
   - [x] 5.5 Tolerate missing fields; log selector misses in DEBUG; return structured defaults.
   - [x] 5.6 Unit tests with representative HTML snippets for all three orgs.
 
-- [ ] 6.0 Salary and job code parsing utilities
+- [x] 6.0 Salary and job code parsing utilities
   - [x] 6.1 Implement regex patterns covering hyphen/en dash, `kr/kr.`, spaces/dots as thousand separators, optional punctuation.
-  - [ ] 6.2 Normalize to integers (NOK annual) and handle ranges; set nulls when qualitative only ("etter avtale").
-  - [ ] 6.3 Implement job code regex `kode\\s*(\\d{3,5})` with title capture when nearby.
-  - [ ] 6.4 Map shared salary ranges across multiple codes with `is_shared_salary = true` when no explicit mapping.
-  - [ ] 6.5 Unit tests using examples from the RSD acceptance criteria.
+  - [x] 6.2 Normalize to integers (NOK annual) and handle ranges; set nulls when qualitative only ("etter avtale").
+  - [x] 6.3 Implement job code regex `kode\\s*(\\d{3,5})` with title capture when nearby.
+  - [x] 6.4 Map shared salary ranges across multiple codes with `is_shared_salary = true` when no explicit mapping.
+  - [x] 6.5 Unit tests using examples from the RSD acceptance criteria.
 
 - [ ] 7.0 Exploded data model and output schema
   - [ ] 7.1 Define dataclasses/models for listing-level and exploded rows (`listing_id` × `job_code`).
