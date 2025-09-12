@@ -76,7 +76,7 @@
   - [x] 6.5 Unit tests using examples from the RSD acceptance criteria.
 
 - [ ] 7.0 Exploded data model and output schema
-  - [ ] 7.1 Define dataclasses/models for listing-level and exploded rows (`listing_id` × `job_code`).
+  - [x] 7.1 Define dataclasses/models for listing-level and exploded rows (`listing_id` × `job_code`).
   - [ ] 7.2 Implement transform to explode per job code with correct salary mapping.
   - [ ] 7.3 Validate schema consistency and dtypes across runs.
 
