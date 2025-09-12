@@ -13,6 +13,8 @@ from requests.exceptions import ConnectionError, ReadTimeout, Timeout
 
 from .config import get_logger
 from . import __version__ as pkg_version
+from urllib.parse import urlparse
+import urllib.robotparser as robotparser
 
 
 log = get_logger("net")
@@ -102,3 +104,79 @@ def get_with_retries(
         delay += random.random() * jitter_max
         log.info("http_retry: %s %s attempt=%d status=%s sleeping=%.2fs", method, url, attempt, status, delay)
         time.sleep(delay)
+
+
+class RobotsCache:
+    """Cache and evaluate robots.txt per host using requests session."""
+
+    def __init__(self, session: requests.Session, user_agent: str, timeout: float = 5.0):
+        self._session = session
+        self._ua = user_agent
+        self._timeout = timeout
+        self._cache: Dict[str, Optional[robotparser.RobotFileParser]] = {}
+
+    def _fetch_robots(self, origin: str) -> Optional[robotparser.RobotFileParser]:
+        # origin like "https://example.com"
+        url = origin.rstrip("/") + "/robots.txt"
+        try:
+            resp = get_with_retries(self._session, url, timeout=self._timeout)
+        except Exception as exc:
+            log.info("robots_fetch_failed: %s (%s)", url, exc)
+            return None
+        if resp.status_code != 200 or not resp.text:
+            return None
+        rp = robotparser.RobotFileParser()
+        rp.set_url(url)
+        rp.parse(resp.text.splitlines())
+        return rp
+
+    def is_allowed(self, url: str) -> bool:
+        parsed = urlparse(url)
+        origin = f"{parsed.scheme}://{parsed.netloc}"
+        if origin not in self._cache:
+            self._cache[origin] = self._fetch_robots(origin)
+        rp = self._cache.get(origin)
+        if rp is None:
+            # No robots available or failed to fetch; default allow
+            return True
+        return rp.can_fetch(self._ua, url)
+
+
+class PoliteFetcher:
+    """Fetcher that enforces politeness delay and robots.txt disallow rules."""
+
+    def __init__(
+        self,
+        session: requests.Session,
+        *,
+        delay_seconds: float = 1.0,
+        respect_robots: bool = True,
+        user_agent: Optional[str] = None,
+    ) -> None:
+        self.session = session
+        self.delay_seconds = max(0.0, delay_seconds)
+        self.respect_robots = respect_robots
+        self.user_agent = user_agent or session.headers.get("User-Agent", default_user_agent())
+        self._last_by_host: Dict[str, float] = {}
+        self._robots = RobotsCache(session, self.user_agent)
+
+    def _sleep_if_needed(self, host: str) -> None:
+        if self.delay_seconds <= 0:
+            return
+        now = time.monotonic()
+        last = self._last_by_host.get(host)
+        if last is not None:
+            elapsed = now - last
+            remaining = self.delay_seconds - elapsed
+            if remaining > 0:
+                time.sleep(remaining)
+        self._last_by_host[host] = time.monotonic()
+
+    def get(self, url: str, **kwargs) -> Optional[Response]:
+        parsed = urlparse(url)
+        host = parsed.netloc
+        if self.respect_robots and not self._robots.is_allowed(url):
+            log.info("robots_disallow_skip: %s", url)
+            return None
+        self._sleep_if_needed(host)
+        return get_with_retries(self.session, url, **kwargs)

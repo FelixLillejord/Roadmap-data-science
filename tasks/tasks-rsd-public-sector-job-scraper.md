@@ -88,7 +88,7 @@
 - [ ] 9.0 Networking: rate limiting, retries, headers, robots check
   - [x] 9.1 Create session with headers and reasonable user-agent.
   - [x] 9.2 Implement retries with exponential backoff and jitter for 429/5xx/timeouts (max 3 attempts).
-  - [ ] 9.3 Add politeness delay and respect `robots.txt` if accessible; avoid fetching blocked paths.
+  - [x] 9.3 Add politeness delay and respect `robots.txt` if accessible; avoid fetching blocked paths.
   - [ ] 9.4 Log and skip permanently failing pages; continue processing others.
 
 - [ ] 10.0 CLI interface and configuration options (e.g., --full, --debug)
